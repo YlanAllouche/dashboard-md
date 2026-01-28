@@ -57,6 +57,16 @@ def detect_content_type(data):
     if len(sample_items) == 0:
         return "task"
 
+    # First, check for scheduled field (calendar takes priority)
+    scheduled_count = 0
+    for item in sample_items:
+        if "scheduled" in item and item["scheduled"]:
+            scheduled_count += 1
+
+    if scheduled_count >= len(sample_items) * 0.5:
+        return "calendar"
+
+    # Then check for type-based detection
     sorted_types = sorted(CONTENT_TYPE_RULES.items(), key=lambda x: x[1]["priority"])
 
     for type_name, type_config in sorted_types:
@@ -201,7 +211,7 @@ def validate_calendar_data(data):
         if not isinstance(item, dict):
             continue
 
-        if item.get("type") == "calendar" and "file" in item and "summary" in item:
+        if "scheduled" in item and item["scheduled"]:
             valid_items += 1
 
     if valid_items == 0:
@@ -314,23 +324,28 @@ def sanitize_calendar_data(data):
         if not isinstance(item, dict):
             continue
 
-        if item.get("type") != "calendar":
-            continue
-
         file_path = item.get("file", "")
         summary = item.get("summary", "")
+        scheduled = item.get("scheduled", "")
 
-        if not file_path or not summary:
+        if not scheduled:
             continue
 
         import os
         id_value = os.path.splitext(os.path.basename(file_path))[0]
 
+        location = item.get("location", "")
+        if not location:
+            location_match = re.search(r'\[location::\s*([^\]]+)\]', summary)
+            location = location_match.group(1) if location_match else ""
+
+        clean_summary = re.sub(r'\s*\[[^]]*\]', '', summary).strip()
+
         sanitized_item = {
             "id": str(id_value),
-            "title": str(summary),
-            "scheduled": str(item.get("scheduled", "")),
-            "location": str(item.get("location", "")),
+            "title": str(clean_summary),
+            "scheduled": str(scheduled),
+            "location": str(location),
             "status": str(item.get("status", "scheduled")),
             "description": item.get("description", ""),
             "attendees": item.get("attendees", []) if isinstance(item.get("attendees"), list) else []

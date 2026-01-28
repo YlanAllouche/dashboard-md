@@ -247,6 +247,7 @@ def get_unified_home_page_html(pywal_css, successful_collections):
     video_links_html = _build_video_links_html(successful_collections.get("video", []))
     task_subtabs_html = _build_sub_tabs_html(successful_collections.get("task", []), "task")
     project_subtabs_html = _build_sub_tabs_html(successful_collections.get("project", []), "project")
+    calendar_subtabs_html = _build_sub_tabs_html(successful_collections.get("calendar", []), "calendar")
 
     embedded_content = {}
     embedded_content["tasks"] = "\n".join([
@@ -469,6 +470,9 @@ def get_unified_home_page_html(pywal_css, successful_collections):
         </div>
 
         <div class="tab-content" id="calendar-content">
+            <div class="sub-tabs" id="calendar-subtabs">
+                {calendar_subtabs_html if calendar_subtabs_html else ''}
+            </div>
             {embedded_content["calendar"] if embedded_content["calendar"] else '<div class="empty-message">No calendar events found</div>'}
         </div>
 

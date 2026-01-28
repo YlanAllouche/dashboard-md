@@ -17,7 +17,6 @@ def get_table_styles():
         background: var(--color0);
         border: 1px solid var(--color7);
         border-radius: 0;
-        overflow: hidden;
     }
 
     .data-row {
@@ -153,6 +152,53 @@ def create_state_toggles_html(item_id, is_active=False, is_focused=False):
     </td>'''
 
 
+def _render_collection_base(collection_info, content_type, empty_message, rows_html):
+    """
+    Base function for rendering any collection as a table.
+
+    Args:
+        collection_info: Dict with 'title', 'stem', and 'data' keys
+        content_type: Type of collection ('task', 'calendar', 'project')
+        empty_message: Message to show when no data
+        rows_html: HTML string for table rows
+
+    Returns:
+        str: HTML for collection table
+    """
+    is_active = "active" if collection_info.get("stem") == collection_info.get("stem", "").split("-")[0] else ""
+
+    return f'''
+    <section class="collection {is_active}" data-type="{content_type}" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
+        <h3>{collection_info['title']}</h3>
+        <table class="data-table {content_type}-table">
+            <tbody>
+                {rows_html}
+            </tbody>
+        </table>
+    </section>'''
+
+
+def _render_empty_collection(collection_info, content_type, empty_message):
+    """
+    Render an empty collection.
+
+    Args:
+        collection_info: Dict with 'title', 'stem' keys
+        content_type: Type of collection
+        empty_message: Message to display
+
+    Returns:
+        str: HTML for empty collection
+    """
+    is_active = "active" if collection_info.get("stem") == collection_info.get("stem", "").split("-")[0] else ""
+
+    return f'''
+    <section class="collection {is_active}" data-type="{content_type}" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
+        <h3>{collection_info['title']}</h3>
+        <div class="empty-message">{empty_message}</div>
+    </section>'''
+
+
 def render_task_collection(collection_info):
     """
     Render a single task collection as a table.
@@ -166,11 +212,7 @@ def render_task_collection(collection_info):
     tasks = collection_info.get("data", [])
 
     if not tasks:
-        return f'''
-    <section class="collection" data-type="task" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
-        <h3>{collection_info['title']}</h3>
-        <div class="empty-message">No tasks found</div>
-    </section>'''
+        return _render_empty_collection(collection_info, "task", "No tasks found")
 
     rows_html = ""
     for task in tasks:
@@ -196,15 +238,7 @@ def render_task_collection(collection_info):
     </tr>'''
         rows_html += row_html
 
-    return f'''
-    <section class="collection" data-type="task" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
-        <h3>{collection_info['title']}</h3>
-        <table class="data-table task-table">
-            <tbody>
-                {rows_html}
-            </tbody>
-        </table>
-    </section>'''
+    return _render_collection_base(collection_info, "task", "No tasks found", rows_html)
 
 
 def render_calendar_collection(collection_info):
@@ -220,11 +254,7 @@ def render_calendar_collection(collection_info):
     events = collection_info.get("data", [])
 
     if not events:
-        return f'''
-    <section class="collection" data-type="calendar" data-title="{collection_info['title']}">
-        <h3>{collection_info['title']}</h3>
-        <div class="empty-message">No events found</div>
-    </section>'''
+        return _render_empty_collection(collection_info, "calendar", "No events found")
 
     rows_html = ""
     for event in events:
@@ -253,15 +283,7 @@ def render_calendar_collection(collection_info):
         <td class="action-cell"></td>
     </tr>'''
 
-    return f'''
-    <section class="collection" data-type="calendar" data-title="{collection_info['title']}">
-        <h3>{collection_info['title']}</h3>
-        <table class="data-table calendar-table">
-            <tbody>
-                {rows_html}
-            </tbody>
-        </table>
-    </section>'''
+    return _render_collection_base(collection_info, "calendar", "No events found", rows_html)
 
 
 def render_project_collection(collection_info):
@@ -277,11 +299,7 @@ def render_project_collection(collection_info):
     projects = collection_info.get("data", [])
 
     if not projects:
-        return f'''
-    <section class="collection" data-type="project" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
-        <h3>{collection_info['title']}</h3>
-        <div class="empty-message">No projects found</div>
-    </section>'''
+        return _render_empty_collection(collection_info, "project", "No projects found")
 
     rows_html = ""
     for project in projects:
@@ -307,12 +325,4 @@ def render_project_collection(collection_info):
         {toggles_html}
     </tr>'''
 
-    return f'''
-    <section class="collection" data-type="project" data-title="{collection_info['title']}" id="{collection_info['stem']}-collection">
-        <h3>{collection_info['title']}</h3>
-        <table class="data-table project-table">
-            <tbody>
-                {rows_html}
-            </tbody>
-        </table>
-    </section>'''
+    return _render_collection_base(collection_info, "project", "No projects found", rows_html)

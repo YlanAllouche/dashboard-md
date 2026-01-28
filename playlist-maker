@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+"""Playlist Maker CLI - Generate video collection dashboards from JSON data"""
+
+from playlist_maker.main import main
+
+if __name__ == "__main__":
+    main()
