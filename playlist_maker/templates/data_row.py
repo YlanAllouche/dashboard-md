@@ -1,4 +1,16 @@
-"""Common row components for table-based rendering."""
+"""Common row components for table-based rendering.
+
+Row Structure Convention (all types):
+1. Extra field cell(s) - type-specific metadata (always FIRST)
+2. Title cell - displays main content (title/summary)
+3. Action cell - active/focus toggle buttons (except calendar)
+
+Field Mapping by Type:
+- Tasks: status → title → active/focus
+- Calendar: date → status → title → location → (no actions)
+- Projects: workspace/class → title → active/focus
+- Notes: status → title (+ description) → active/focus
+"""
 
 
 def get_table_styles():
@@ -205,6 +217,11 @@ def render_task_collection(collection_info, is_first=False):
     """
     Render a single task collection as a table.
 
+    Row structure:
+    1. Status cell (extra field - FIRST)
+    2. Title cell (task title)
+    3. Action cell (active/focus toggles)
+
     Args:
         collection_info: Dict with 'title' and 'data' keys
         is_first: Whether this is the first collection (makes it active)
@@ -219,12 +236,12 @@ def render_task_collection(collection_info, is_first=False):
 
     rows_html = ""
     for task in tasks:
+        status = task.get("status", "")
         title_cell = create_title_cell(task.get("title", ""), "")
-        due_date = task.get("due_date", "")
 
         metadata_html = f'''
-        <td class="metadata-cell">
-            {due_date}
+        <td class="status-cell">
+            {status}
         </td>'''
 
         toggles_html = create_state_toggles_html(
@@ -235,8 +252,8 @@ def render_task_collection(collection_info, is_first=False):
 
         row_html = f'''
     <tr class="data-row" data-id="{task['id']}" data-type="task">
-        {title_cell}
         {metadata_html}
+        {title_cell}
         {toggles_html}
     </tr>'''
         rows_html += row_html
@@ -247,6 +264,13 @@ def render_task_collection(collection_info, is_first=False):
 def render_calendar_collection(collection_info, is_first=False):
     """
     Render a single calendar collection as a table.
+
+    Row structure:
+    1. Scheduled cell (extra field - FIRST: date)
+    2. Status cell (extra field)
+    3. Title cell (event title)
+    4. Location cell (extra field)
+    5. Action cell (empty - no active/focus toggles)
 
     Args:
         collection_info: Dict with 'title' and 'data' keys
@@ -265,8 +289,9 @@ def render_calendar_collection(collection_info, is_first=False):
         title_cell = create_title_cell(event.get("title", ""), "")
         scheduled = event.get("scheduled", "")
         location = event.get("location", "")
+        status = event.get("status", "")
 
-        metadata_html = f'''
+        extra_fields_html = f'''
         <td class="scheduled-cell">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -276,14 +301,20 @@ def render_calendar_collection(collection_info, is_first=False):
             </svg>
             {scheduled}
         </td>
+        <td class="status-cell">
+            {status}
+        </td>'''
+
+        location_html = f'''
         <td class="location-cell">
             {location}
         </td>'''
 
         rows_html += f'''
     <tr class="data-row" data-id="{event['id']}" data-type="calendar">
+        {extra_fields_html}
         {title_cell}
-        {metadata_html}
+        {location_html}
         <td class="action-cell"></td>
     </tr>'''
 
@@ -293,6 +324,11 @@ def render_calendar_collection(collection_info, is_first=False):
 def render_project_collection(collection_info, is_first=False):
     """
     Render a single project collection as a table.
+
+    Row structure:
+    1. Workspace/class cell (extra field - FIRST)
+    2. Title cell (project title)
+    3. Action cell (active/focus toggles)
 
     Args:
         collection_info: Dict with 'title' and 'data' keys
@@ -325,8 +361,8 @@ def render_project_collection(collection_info, is_first=False):
 
         rows_html += f'''
     <tr class="data-row" data-id="{project['id']}" data-type="project">
-        {title_cell}
         {metadata_html}
+        {title_cell}
         {toggles_html}
     </tr>'''
 
@@ -336,6 +372,11 @@ def render_project_collection(collection_info, is_first=False):
 def render_notes_collection(collection_info, is_first=False):
     """
     Render a single notes collection as a table.
+
+    Row structure:
+    1. Status cell (extra field - FIRST)
+    2. Title cell (note title + description)
+    3. Action cell (active/focus toggles)
 
     Args:
         collection_info: Dict with 'title' and 'data' keys
@@ -367,8 +408,8 @@ def render_notes_collection(collection_info, is_first=False):
 
         rows_html += f'''
     <tr class="data-row" data-id="{note['id']}" data-type="notes">
-        {title_cell}
         {metadata_html}
+        {title_cell}
         {toggles_html}
     </tr>'''
 
