@@ -251,18 +251,18 @@ def get_unified_home_page_html(pywal_css, successful_collections):
 
     embedded_content = {}
     embedded_content["tasks"] = "\n".join([
-        render_task_collection(coll)
-        for coll in successful_collections.get("task", [])
+        render_task_collection(coll, idx == 0)
+        for idx, coll in enumerate(successful_collections.get("task", []))
     ])
 
     embedded_content["calendar"] = "\n".join([
-        render_calendar_collection(coll)
-        for coll in successful_collections.get("calendar", [])
+        render_calendar_collection(coll, idx == 0)
+        for idx, coll in enumerate(successful_collections.get("calendar", []))
     ])
 
     embedded_content["projects"] = "\n".join([
-        render_project_collection(coll)
-        for coll in successful_collections.get("project", [])
+        render_project_collection(coll, idx == 0)
+        for idx, coll in enumerate(successful_collections.get("project", []))
     ])
 
     return f"""<!DOCTYPE html>

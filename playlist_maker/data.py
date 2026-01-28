@@ -57,10 +57,12 @@ def detect_content_type(data):
     if len(sample_items) == 0:
         return "task"
 
-    # First, check for scheduled field (calendar takes priority)
+    # First, check for scheduled field or calendar type (calendar takes priority)
     scheduled_count = 0
     for item in sample_items:
-        if "scheduled" in item and item["scheduled"]:
+        if "scheduled" in item:
+            scheduled_count += 1
+        elif item.get("type") == "calendar":
             scheduled_count += 1
 
     if scheduled_count >= len(sample_items) * 0.5:
@@ -211,7 +213,7 @@ def validate_calendar_data(data):
         if not isinstance(item, dict):
             continue
 
-        if "scheduled" in item and item["scheduled"]:
+        if "scheduled" in item or item.get("type") == "calendar":
             valid_items += 1
 
     if valid_items == 0:
@@ -327,6 +329,13 @@ def sanitize_calendar_data(data):
         file_path = item.get("file", "")
         summary = item.get("summary", "")
         scheduled = item.get("scheduled", "")
+
+        if not scheduled:
+            scheduled_match = re.search(r'\[scheduled::\s*([^\]]+)\]', summary)
+            scheduled = scheduled_match.group(1) if scheduled_match else ""
+
+        if not scheduled:
+            scheduled = item.get("date", "")
 
         if not scheduled:
             continue
