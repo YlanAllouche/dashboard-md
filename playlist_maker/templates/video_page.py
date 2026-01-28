@@ -352,7 +352,6 @@ def get_video_page_html(title, pywal_css, json_data):
     <div class="container">
         <div class="header">
             <h1><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;display:inline;margin-right:8px;vertical-align:middle;"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg> {{title}}</h1>
-            <p>Manage your video collection</p>
         </div>
         
         <div class="stats" id="stats">
@@ -498,16 +497,12 @@ def get_video_page_html(title, pywal_css, json_data):
 
         function renderStats() {{
             const totalVideos = videoData.length;
-            const watchedVideos = videoData.filter(v => v.watched).length;
             const totalDuration = videoData.reduce((sum, v) => sum + v.duration, 0);
-            const watchedDuration = videoData.filter(v => v.watched).reduce((sum, v) => sum + v.duration, 0);
             
             const statsElement = document.getElementById('stats');
             statsElement.innerHTML = `
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin-right:4px;vertical-align:middle;"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${{totalVideos}} videos • 
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin:0 4px 0 4px;vertical-align:middle;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${{watchedVideos}} watched • 
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin:0 4px 0 4px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${{formatDuration(totalDuration)}} total • 
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;display:inline;margin:0 4px 0 4px;vertical-align:middle;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ${{formatDuration(watchedDuration)}} watched
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin:0 4px 0 4px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${{formatDuration(totalDuration)}} total
             `;
         }}
 

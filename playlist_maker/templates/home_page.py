@@ -845,9 +845,14 @@ def _build_video_links_html(video_collections):
 
     links = []
     for collection in video_collections:
+        title = collection['title']
+        # Remove " Videos" suffix if present
+        if title.endswith(' Videos'):
+            title = title[:-7]
+
         links.append(f'''
         <a href="#" data-video-url="{collection['stem']}.html" class="collection-link video-link">
-            <div class="collection-title">{collection['title']}</div>
+            <div class="collection-title">{title}</div>
             <div class="collection-count">{collection['count']} videos</div>
         </a>''')
 
