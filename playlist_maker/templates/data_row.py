@@ -113,23 +113,46 @@ def get_table_styles():
         color: var(--color0);
     }
 
+    .title-link {
+        color: var(--foreground);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .title-link:hover {
+        color: var(--color4);
+        text-decoration: underline;
+    }
+
+    .title-link .title {
+        font-weight: 500;
+    }
+
 
     '''
 
 
-def create_title_cell(title, description=""):
+def create_title_cell(title, description="", file="", line=1):
     """
     Create a title cell with optional description.
 
     Args:
         title: Title text
         description: Optional description text
+        file: File path for Obsidian link (optional)
+        line: Line number for Obsidian link (default: 1)
 
     Returns:
         str: HTML for title cell
     """
+    if file:
+        title_link = f'<a href="#" class="title-link" data-file="{file}" data-line="{line}">{title}</a>'
+    else:
+        title_link = f'<div class="title">{title}</div>'
+
     html = f'''<td class="title-cell">
-        <div class="title">{title}</div>'''
+        {title_link}'''
 
     if description:
         html += f'''<div class="description">{description}</div>'''
@@ -219,7 +242,7 @@ def render_task_collection(collection_info, is_first=False):
 
     Row structure:
     1. Status cell (extra field - FIRST)
-    2. Title cell (task title)
+    2. Title cell (task title - as link)
     3. Action cell (active/focus toggles)
 
     Args:
@@ -237,7 +260,12 @@ def render_task_collection(collection_info, is_first=False):
     rows_html = ""
     for task in tasks:
         status = task.get("status", "")
-        title_cell = create_title_cell(task.get("title", ""), "")
+        title_cell = create_title_cell(
+            task.get("title", ""),
+            "",
+            task.get("file", ""),
+            task.get("line", 1)
+        )
 
         metadata_html = f'''
         <td class="status-cell">
@@ -268,7 +296,7 @@ def render_calendar_collection(collection_info, is_first=False):
     Row structure:
     1. Scheduled cell (extra field - FIRST: date)
     2. Status cell (extra field)
-    3. Title cell (event title)
+    3. Title cell (event title - as link)
     4. Location cell (extra field)
     5. Action cell (empty - no active/focus toggles)
 
@@ -286,7 +314,13 @@ def render_calendar_collection(collection_info, is_first=False):
 
     rows_html = ""
     for event in events:
-        title_cell = create_title_cell(event.get("title", ""), "")
+        title_cell = create_title_cell(
+            event.get("title", ""),
+            "",
+            event.get("file", ""),
+            event.get("line", 1)
+        )
+        scheduled = event.get("scheduled", "")
         scheduled = event.get("scheduled", "")
         location = event.get("location", "")
         status = event.get("status", "")
@@ -327,7 +361,7 @@ def render_project_collection(collection_info, is_first=False):
 
     Row structure:
     1. Workspace/class cell (extra field - FIRST)
-    2. Title cell (project title)
+    2. Title cell (project title - as link)
     3. Action cell (active/focus toggles)
 
     Args:
@@ -344,7 +378,12 @@ def render_project_collection(collection_info, is_first=False):
 
     rows_html = ""
     for project in projects:
-        title_cell = create_title_cell(project.get("title", ""), "")
+        title_cell = create_title_cell(
+            project.get("title", ""),
+            "",
+            project.get("file", ""),
+            project.get("line", 1)
+        )
         workspace = project.get("workspace", "")
         class_type = project.get("class", "")
 
@@ -375,7 +414,7 @@ def render_notes_collection(collection_info, is_first=False):
 
     Row structure:
     1. Status cell (extra field - FIRST)
-    2. Title cell (note title + description)
+    2. Title cell (note title + description - as link)
     3. Action cell (active/focus toggles)
 
     Args:
@@ -392,7 +431,12 @@ def render_notes_collection(collection_info, is_first=False):
 
     rows_html = ""
     for note in notes:
-        title_cell = create_title_cell(note.get("title", ""), note.get("description", ""))
+        title_cell = create_title_cell(
+            note.get("title", ""),
+            note.get("description", ""),
+            note.get("file", ""),
+            note.get("line", 1)
+        )
         status = note.get("status", "active")
 
         metadata_html = f'''

@@ -298,6 +298,7 @@ def sanitize_task_data(data):
         due_date = date_match.group(1) if date_match else ""
 
         clean_summary = re.sub(r'\s*\[.*?\]', '', summary).strip()
+        line = item.get("line", 1)
 
         sanitized_item = {
             "id": str(id_value),
@@ -307,7 +308,9 @@ def sanitize_task_data(data):
             "due_date": str(due_date),
             "priority": str("normal"),
             "active": bool(is_active),
-            "focus": bool(is_focused)
+            "focus": bool(is_focused),
+            "file": str(file_path),
+            "line": int(line)
         }
 
         if not sanitized_item["id"]:
@@ -357,6 +360,7 @@ def sanitize_calendar_data(data):
             location = location_match.group(1) if location_match else ""
 
         clean_summary = re.sub(r'\s*\[[^]]*\]', '', summary).strip()
+        line = item.get("line", 1)
 
         sanitized_item = {
             "id": str(id_value),
@@ -365,7 +369,9 @@ def sanitize_calendar_data(data):
             "location": str(location),
             "status": str(item.get("status", "scheduled")),
             "description": item.get("description", ""),
-            "attendees": item.get("attendees", []) if isinstance(item.get("attendees"), list) else []
+            "attendees": item.get("attendees", []) if isinstance(item.get("attendees"), list) else [],
+            "file": str(file_path),
+            "line": int(line)
         }
 
         if not sanitized_item["id"]:
@@ -403,6 +409,7 @@ def sanitize_project_data(data):
 
         import os
         id_value = os.path.splitext(os.path.basename(file_path))[0]
+        line = item.get("line", 1)
 
         sanitized_item = {
             "id": str(id_value),
@@ -414,7 +421,9 @@ def sanitize_project_data(data):
             "due_date": str(""),
             "description": "",
             "active": bool(True),
-            "focus": bool(False)
+            "focus": bool(False),
+            "file": str(file_path),
+            "line": int(line)
         }
 
         if not sanitized_item["id"]:
@@ -491,6 +500,7 @@ def sanitize_notes_data(data):
 
         active_match = re.search(r'\[active::\s*(\w+)\]', summary)
         focus_match = re.search(r'\[focus::\s*(\w+)\]', summary)
+        line = item.get("line", 1)
 
         is_active = active_match and active_match.group(1).lower() in ["true", "yes", "1"]
         is_focused = focus_match and focus_match.group(1).lower() in ["true", "yes", "1"]
@@ -501,7 +511,9 @@ def sanitize_notes_data(data):
             "description": str(description),
             "status": str(item.get("status", "active")),
             "active": bool(is_active),
-            "focus": bool(is_focused)
+            "focus": bool(is_focused),
+            "file": str(file_path),
+            "line": int(line)
         }
 
         if not sanitized_item["id"]:
