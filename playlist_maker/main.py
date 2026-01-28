@@ -77,6 +77,9 @@ def main():
     # Find all JSON files
     json_files = list(folder_path.glob("*.json"))
 
+    # Skip files starting with "-"
+    json_files = [f for f in json_files if not f.name.startswith("-")]
+
     if not json_files:
         print("No JSON files found in the folder.")
         sys.exit(1)
