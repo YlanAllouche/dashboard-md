@@ -16,13 +16,16 @@ def get_unified_page_javascript():
         // Video fragment loading
         let currentVideoUrl = null;
 
-        // Video link clicks
-        document.querySelectorAll('.video-link').forEach(link => {
-            link.addEventListener('click', (e) => {
+        // Video link clicks - using window-level event delegation for reliability
+        window.addEventListener('click', (e) => {
+            const link = e.target.closest('.video-link');
+            if (link) {
                 e.preventDefault();
                 const videoUrl = link.dataset.videoUrl;
-                loadVideoFragment(videoUrl);
-            });
+                if (videoUrl) {
+                    loadVideoFragment(videoUrl);
+                }
+            }
         });
 
         // Load video fragment dynamically
@@ -95,10 +98,17 @@ def get_unified_page_javascript():
             button.addEventListener('click', () => {
                 const tabId = button.dataset.tab;
 
-                // If clicking Videos tab and a video fragment is loaded, show the list
-                if (tabId === 'videos' && currentVideoUrl) {
-                    showVideoList();
-                    return;
+                // Always reset video state when switching tabs
+                const listContainer = document.getElementById('video-list-container');
+                const fragmentContainer = document.getElementById('video-fragment-container');
+
+                if (listContainer && fragmentContainer) {
+                    // Reset containers to initial state
+                    listContainer.style.display = 'block';
+                    listContainer.style.visibility = 'visible';
+                    fragmentContainer.style.display = 'none';
+                    fragmentContainer.innerHTML = '';
+                    currentVideoUrl = null;
                 }
 
                 // Remove active class from all tabs
@@ -113,7 +123,10 @@ def get_unified_page_javascript():
 
                 // Activate clicked tab and show content
                 button.classList.add('active');
-                document.getElementById(tabId + '-content').classList.add('active');
+                const targetContent = document.getElementById(tabId + '-content');
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
             });
         });
 
