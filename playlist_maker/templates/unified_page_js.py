@@ -6,17 +6,100 @@ Extracted for better maintainability and debugging.
 def get_unified_page_javascript():
     """
     Return JavaScript code for the unified home page.
-    
+
     This is extracted as a separate function to avoid:
     - Complex f-string escaping issues
     - Large, difficult-to-debug strings
     - Confusion between Python and JavaScript syntax
     """
     return """
+        // Video fragment loading
+        let currentVideoUrl = null;
+
+        // Video link clicks
+        document.querySelectorAll('.video-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const videoUrl = link.dataset.videoUrl;
+                loadVideoFragment(videoUrl);
+            });
+        });
+
+        // Load video fragment dynamically
+        async function loadVideoFragment(url) {
+            const listContainer = document.getElementById('video-list-container');
+            const fragmentContainer = document.getElementById('video-fragment-container');
+            const videosContent = document.getElementById('videos-content');
+
+            // Show loading state
+            listContainer.style.display = 'none';
+            fragmentContainer.style.display = 'block';
+            fragmentContainer.innerHTML = '<div style="text-align: center; padding: 3rem;">Loading...</div>';
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+
+                // Parse the HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Extract the header (title, stats)
+                const header = doc.querySelector('.header');
+                const stats = doc.querySelector('#stats');
+                const videoGrid = doc.querySelector('#videoGrid');
+                const videoScript = doc.querySelector('script');
+
+                // Build fragment HTML
+                let fragmentHtml = '';
+                if (header) {
+                    fragmentHtml += '<div class="header">' + header.innerHTML + '</div>';
+                }
+                if (stats) {
+                    fragmentHtml += '<div id="stats">' + stats.innerHTML + '</div>';
+                }
+                if (videoGrid) {
+                    fragmentHtml += '<div class="video-grid" id="videoGrid">' + videoGrid.innerHTML + '</div>';
+                }
+
+                // Render fragment
+                fragmentContainer.innerHTML = fragmentHtml;
+
+                // Execute the video page script to initialize functionality
+                if (videoScript) {
+                    const script = document.createElement('script');
+                    script.textContent = videoScript.textContent;
+                    fragmentContainer.appendChild(script);
+                }
+
+                currentVideoUrl = url;
+            } catch (error) {
+                console.error('Error loading video fragment:', error);
+                fragmentContainer.innerHTML = '<div style="text-align: center; padding: 3rem;">Error loading video collection. <a href="#" onclick="showVideoList()">Try again</a></div>';
+            }
+        }
+
+        // Show video list
+        function showVideoList() {
+            const listContainer = document.getElementById('video-list-container');
+            const fragmentContainer = document.getElementById('video-fragment-container');
+
+            listContainer.style.display = 'block';
+            fragmentContainer.style.display = 'none';
+            fragmentContainer.innerHTML = '';
+            currentVideoUrl = null;
+        }
+
         // Tab switching
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.dataset.tab;
+
+                // If clicking Videos tab and a video fragment is loaded, show the list
+                if (tabId === 'videos' && currentVideoUrl) {
+                    showVideoList();
+                    return;
+                }
 
                 // Remove active class from all tabs
                 document.querySelectorAll('.tab-button').forEach(btn => {

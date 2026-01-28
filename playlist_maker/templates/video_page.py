@@ -36,26 +36,6 @@ def get_video_page_html(title, pywal_css, json_data):
         .header {{
             text-align: center;
             margin-bottom: 2rem;
-            position: relative;
-        }}
-
-        .home-link {{
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--color4);
-            color: var(--color0);
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }}
-
-        .home-link:hover {{
-            opacity: 0.8;
         }}
 
         .header h1 {{
@@ -351,13 +331,6 @@ def get_video_page_html(title, pywal_css, json_data):
                 font-size: 2rem;
             }}
 
-            .home-link {{
-                position: static;
-                transform: none;
-                display: inline-block;
-                margin-bottom: 1rem;
-            }}
-
             .btn {{
                 font-size: 0.75rem;
                 padding: 0.4rem 0.6rem;
@@ -378,7 +351,6 @@ def get_video_page_html(title, pywal_css, json_data):
 <body>
     <div class="container">
         <div class="header">
-            <a href="index.html" class="home-link">← Home</a>
             <h1><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;display:inline;margin-right:8px;vertical-align:middle;"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg> {{title}}</h1>
             <p>Manage your video collection</p>
         </div>

@@ -30,26 +30,6 @@
         .header {
             text-align: center;
             margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .home-link {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--color4);
-            color: var(--color0);
-            padding: 0.5rem 1rem;
-            border-radius: 0;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .home-link:hover {
-            opacity: 0.8;
         }
 
         .header h1 {
@@ -345,13 +325,6 @@
                 font-size: 2rem;
             }
 
-            .home-link {
-                position: static;
-                transform: none;
-                display: inline-block;
-                margin-bottom: 1rem;
-            }
-
             .btn {
                 font-size: 0.75rem;
                 padding: 0.4rem 0.6rem;
@@ -372,7 +345,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <a href="index.html" class="home-link">← Home</a>
             <h1>{TITLE}</h1>
             <p>Manage your video collection</p>
         </div>
