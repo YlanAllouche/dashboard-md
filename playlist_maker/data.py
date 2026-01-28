@@ -35,6 +35,14 @@ CONTENT_TYPE_RULES = {
         "optional_fields": ["status", "description", "due_date", "priority", "active", "focus"],
         "type_field_value": "task",
         "validator": "validate_task_data"
+    },
+    "notes": {
+        "priority": 5,
+        "required_fields": ["file", "summary"],
+        "optional_fields": ["workspace", "class", "status", "description", "active", "focus"],
+        "type_field_value": "note",
+        "status_field_value": None,
+        "validator": "validate_notes_data"
     }
 }
 
@@ -417,13 +425,100 @@ def sanitize_project_data(data):
     return sanitized
 
 
+def validate_notes_data(data):
+    """
+    Validate that the JSON data is suitable for notes processing.
+
+    Args:
+        data: Parsed JSON data
+
+    Returns:
+        tuple: (is_valid, reason)
+    """
+    if not isinstance(data, list):
+        return False, "Not a list"
+
+    if len(data) == 0:
+        return False, "Empty list"
+
+    valid_items = 0
+
+    for item in data[:5]:
+        if not isinstance(item, dict):
+            continue
+
+        if item.get("type") == "note":
+            valid_items += 1
+
+    if valid_items == 0:
+        return False, "No valid notes items found"
+
+    return True, "Valid notes data"
+
+
+def sanitize_notes_data(data):
+    """
+    Clean and ensure notes data has all required fields with defaults.
+
+    Args:
+        data: Parsed JSON data
+
+    Returns:
+        list: List of sanitized note dictionaries
+    """
+    sanitized = []
+
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+
+        if item.get("type") != "note":
+            continue
+
+        file_path = item.get("file", "")
+        summary = item.get("summary", "")
+
+        if not file_path or not summary:
+            continue
+
+        import os
+        id_value = os.path.splitext(os.path.basename(file_path))[0]
+
+        description_match = re.search(r'\[description::\s*([^\]]+)\]', summary)
+        description = description_match.group(1) if description_match else ""
+        
+        clean_summary = re.sub(r'\s*\[description::\s*[^\]]+\]', '', summary).strip()
+
+        active_match = re.search(r'\[active::\s*(\w+)\]', summary)
+        focus_match = re.search(r'\[focus::\s*(\w+)\]', summary)
+
+        is_active = active_match and active_match.group(1).lower() in ["true", "yes", "1"]
+        is_focused = focus_match and focus_match.group(1).lower() in ["true", "yes", "1"]
+
+        sanitized_item = {
+            "id": str(id_value),
+            "title": str(clean_summary),
+            "description": str(description),
+            "status": str(item.get("status", "active")),
+            "active": bool(is_active),
+            "focus": bool(is_focused)
+        }
+
+        if not sanitized_item["id"]:
+            continue
+
+        sanitized.append(sanitized_item)
+
+    return sanitized
+
+
 def validate_and_sanitize(data, content_type):
     """
     Route data to appropriate validator and sanitizer based on content type.
 
     Args:
         data: Parsed JSON data
-        content_type: Content type string ("video", "task", "calendar", "project")
+        content_type: Content type string ("video", "task", "calendar", "project", "notes")
 
     Returns:
         tuple: (sanitized_data, is_valid, reason)
@@ -432,14 +527,16 @@ def validate_and_sanitize(data, content_type):
         "video": validate_video_data,
         "task": validate_task_data,
         "calendar": validate_calendar_data,
-        "project": validate_project_data
+        "project": validate_project_data,
+        "notes": validate_notes_data
     }
 
     sanitizers = {
         "video": sanitize_video_data,
         "task": sanitize_task_data,
         "calendar": sanitize_calendar_data,
-        "project": sanitize_project_data
+        "project": sanitize_project_data,
+        "notes": sanitize_notes_data
     }
 
     validator = validators.get(content_type)

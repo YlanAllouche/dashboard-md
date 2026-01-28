@@ -240,6 +240,7 @@ def get_unified_home_page_html(pywal_css, successful_collections):
         render_task_collection,
         render_calendar_collection,
         render_project_collection,
+        render_notes_collection,
         get_table_styles
     )
 
@@ -248,6 +249,7 @@ def get_unified_home_page_html(pywal_css, successful_collections):
     task_subtabs_html = _build_sub_tabs_html(successful_collections.get("task", []), "task")
     project_subtabs_html = _build_sub_tabs_html(successful_collections.get("project", []), "project")
     calendar_subtabs_html = _build_sub_tabs_html(successful_collections.get("calendar", []), "calendar")
+    notes_subtabs_html = _build_sub_tabs_html(successful_collections.get("notes", []), "notes")
 
     embedded_content = {}
     embedded_content["tasks"] = "\n".join([
@@ -263,6 +265,11 @@ def get_unified_home_page_html(pywal_css, successful_collections):
     embedded_content["projects"] = "\n".join([
         render_project_collection(coll, idx == 0)
         for idx, coll in enumerate(successful_collections.get("project", []))
+    ])
+
+    embedded_content["notes"] = "\n".join([
+        render_notes_collection(coll, idx == 0)
+        for idx, coll in enumerate(successful_collections.get("notes", []))
     ])
 
     return f"""<!DOCTYPE html>
@@ -482,6 +489,13 @@ def get_unified_home_page_html(pywal_css, successful_collections):
             </div>
             {embedded_content["projects"] if embedded_content["projects"] else '<div class="empty-message">No projects found</div>'}
         </div>
+
+        <div class="tab-content" id="notes-content">
+            <div class="sub-tabs" id="notes-subtabs">
+                {notes_subtabs_html if notes_subtabs_html else ''}
+            </div>
+            {embedded_content["notes"] if embedded_content["notes"] else '<div class="empty-message">No notes found</div>'}
+        </div>
     </div>
 
     <script>
@@ -596,6 +610,13 @@ def _build_tabs_html(successful_collections):
         tabs.append(f'''
     <button class="tab-button" data-tab="projects">
         Projects ({project_count})
+    </button>''')
+
+    notes_count = len(successful_collections.get("notes", []))
+    if notes_count > 0:
+        tabs.append(f'''
+    <button class="tab-button" data-tab="notes">
+        Notes ({notes_count})
     </button>''')
 
     return "\n".join(tabs)

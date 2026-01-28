@@ -88,7 +88,8 @@ def main():
         "video": [],
         "task": [],
         "calendar": [],
-        "project": []
+        "project": [],
+        "notes": []
     }
 
     failed_files = []

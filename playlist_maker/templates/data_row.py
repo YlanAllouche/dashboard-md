@@ -331,3 +331,45 @@ def render_project_collection(collection_info, is_first=False):
     </tr>'''
 
     return _render_collection_base(collection_info, "project", "No projects found", rows_html, is_first)
+
+
+def render_notes_collection(collection_info, is_first=False):
+    """
+    Render a single notes collection as a table.
+
+    Args:
+        collection_info: Dict with 'title' and 'data' keys
+        is_first: Whether this is the first collection (makes it active)
+
+    Returns:
+        str: HTML for notes collection table
+    """
+    notes = collection_info.get("data", [])
+
+    if not notes:
+        return _render_empty_collection(collection_info, "notes", "No notes found", is_first)
+
+    rows_html = ""
+    for note in notes:
+        title_cell = create_title_cell(note.get("title", ""), note.get("description", ""))
+        status = note.get("status", "active")
+
+        metadata_html = f'''
+        <td class="status-cell">
+            {status}
+        </td>'''
+
+        toggles_html = create_state_toggles_html(
+            note["id"],
+            note.get("active", False),
+            note.get("focus", False)
+        )
+
+        rows_html += f'''
+    <tr class="data-row" data-id="{note['id']}" data-type="notes">
+        {title_cell}
+        {metadata_html}
+        {toggles_html}
+    </tr>'''
+
+    return _render_collection_base(collection_info, "notes", "No notes found", rows_html, is_first)
