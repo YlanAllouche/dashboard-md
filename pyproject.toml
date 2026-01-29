@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "obsi-dash"
+version = "2.1.0"
+description = "Generate html dashboards from Obsidian dataview generated JSON data"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Ylan Allouche"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/YlanAllouche/dashboard-md"
+
+[project.scripts]
+obsi-dash = "playlist_maker.main:main"
+
+[tool.setuptools]
+packages = ["playlist_maker", "playlist_maker.utils", "playlist_maker.templates"]
+include-package-data = true
