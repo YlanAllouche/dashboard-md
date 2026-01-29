@@ -305,7 +305,7 @@ def sanitize_task_data(data):
         sanitized_item = {
             "id": str(id_value),
             "title": str(clean_summary),
-            "status": str(item.get("status", "pending").strip()),
+            "status": str(item.get("status", "pending")),
             "description": "",
             "due_date": str(due_date),
             "priority": str("normal"),
@@ -418,7 +418,7 @@ def sanitize_project_data(data):
             "title": str(summary),
             "workspace": str(""),
             "class": str(""),
-            "status": str("in-progress"),
+            "status": str("current"),
             "progress": int(0),
             "due_date": str(""),
             "description": "",

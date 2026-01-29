@@ -7,21 +7,26 @@ def get_dashboard_css():
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
         :root {
-            --bg-deep: #0c1016;
-            --bg-surface: #131820;
-            --bg-elevated: #1c2230;
-            --bg-card: #181e28;
-            --bg-subtle: rgba(255, 255, 255, 0.02);
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-medium: rgba(255, 255, 255, 0.1);
-            --accent-primary: #e8c47c;
-            --accent-secondary: #7eb8da;
-            --accent-tertiary: #a78bfa;
-            --accent-quaternary: #f472b6;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --text-subtle: #475569;
+            --bg-light: #f8f7f4;
+            --bg-cream: #f1efea;
+            --bg-paper: #ffffff;
+            --bg-dark: #1a1a1a;
+            --bg-dark-elevated: #2a2a2a;
+            --bg-dark-surface: #1e1e1e;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --border-medium: rgba(0, 0, 0, 0.1);
+            --border-dark: rgba(255, 255, 255, 0.08);
+            --accent-primary: #c9a227;
+            --accent-secondary: #2d6a4f;
+            --accent-tertiary: #6b4c9a;
+            --accent-quaternary: #c23645;
+            --accent-success: #2d8b6b;
+            --text-dark-primary: #1a1a1a;
+            --text-dark-secondary: #4a4a4a;
+            --text-dark-muted: #6b6b6b;
+            --text-light-primary: #f8f7f4;
+            --text-light-secondary: #d4d3d0;
+            --text-light-muted: #a8a6a0;
         }
 
         * {
@@ -32,28 +37,12 @@ def get_dashboard_css():
 
         body {
             font-family: 'Source Sans Pro', sans-serif;
-            background: linear-gradient(135deg, var(--bg-deep) 0%, #0f151e 50%, var(--bg-surface) 100%);
-            color: var(--text-primary);
+            background: var(--bg-light);
+            color: var(--text-dark-primary);
             line-height: 1.6;
-            min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.4;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(126, 184, 218, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(232, 196, 124, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(167, 139, 250, 0.03) 0%, transparent 50%);
-            z-index: 0;
+            min-height: 100vh;
         }
 
         /* ===== LAYOUT ===== */
@@ -82,26 +71,22 @@ def get_dashboard_css():
         .page-header {
             text-align: center;
             padding: 4rem 3rem;
-            background: var(--bg-card);
+            background: var(--bg-paper);
             position: relative;
             overflow: hidden;
-            border-radius: 16px;
+            border-radius: 2px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .page-header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(232, 196, 124, 0.08) 0%, transparent 60%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
         }
 
         .page-header h1 {
@@ -109,7 +94,7 @@ def get_dashboard_css():
             font-size: 3.5rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
-            color: var(--text-primary);
+            color: var(--text-dark-primary);
             letter-spacing: -0.02em;
             position: relative;
         }
@@ -117,7 +102,7 @@ def get_dashboard_css():
         .page-header p {
             font-family: 'Source Sans Pro', sans-serif;
             font-size: 0.875rem;
-            color: var(--text-secondary);
+            color: var(--text-dark-secondary);
             letter-spacing: 0.15em;
             text-transform: uppercase;
             font-weight: 500;
@@ -128,18 +113,19 @@ def get_dashboard_css():
         .dashboard-tabs {
             display: flex;
             gap: 0.25rem;
-            background: var(--bg-surface);
             padding: 0.5rem;
-            border-radius: 12px;
+            background: var(--bg-paper);
+            border-radius: 4px;
             overflow-x: auto;
-            border: 1px solid var(--border-subtle);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
 
         .dashboard-tabs button {
             padding: 0.75rem 1.5rem;
             background: transparent;
             border: none;
-            color: var(--text-muted);
+            color: var(--text-dark-muted);
             font-family: 'Source Sans Pro', sans-serif;
             font-size: 0.8125rem;
             font-weight: 600;
@@ -147,18 +133,18 @@ def get_dashboard_css():
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-radius: 8px;
+            border-radius: 2px;
             position: relative;
         }
 
         .dashboard-tabs button:hover {
-            color: var(--text-primary);
-            background: var(--bg-subtle);
+            color: var(--text-dark-primary);
+            background: var(--bg-light);
         }
 
         .dashboard-tabs button.active {
-            color: var(--bg-deep);
-            background: var(--accent-primary);
+            color: var(--bg-paper);
+            background: var(--bg-dark);
         }
 
         /* ===== DASHBOARD WIDGETS ===== */
@@ -186,15 +172,16 @@ def get_dashboard_css():
         .dashboard-table {
             width: 100%;
             border-collapse: collapse;
-            background: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-paper);
+            border-radius: 2px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
         }
 
         .dashboard-table thead {
-            background: var(--bg-elevated);
-            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .dashboard-table th {
@@ -203,15 +190,15 @@ def get_dashboard_css():
             font-family: 'Source Sans Pro', sans-serif;
             font-weight: 600;
             font-size: 0.6875rem;
-            color: var(--text-secondary);
+            color: var(--text-light-secondary);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
 
         .dashboard-table td {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-subtle);
-            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-dark-primary);
             font-size: 0.875rem;
             vertical-align: middle;
             transition: background 0.2s ease;
@@ -222,7 +209,7 @@ def get_dashboard_css():
         }
 
         .dashboard-table tbody tr:hover {
-            background: var(--bg-elevated);
+            background: var(--bg-cream);
         }
 
         /* Row styling */
@@ -230,7 +217,7 @@ def get_dashboard_css():
             font-family: 'JetBrains Mono', monospace;
             font-weight: 500;
             font-size: 0.75rem;
-            color: var(--text-primary);
+            color: var(--text-dark-primary);
             width: 140px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -249,7 +236,7 @@ def get_dashboard_css():
         }
 
         .row-data {
-            color: var(--text-secondary);
+            color: var(--text-dark-secondary);
             font-family: 'Source Sans Pro', sans-serif;
             font-size: 0.875rem;
             font-weight: 300;
@@ -270,12 +257,12 @@ def get_dashboard_css():
         /* Nested table styling (for progress widget) */
         .dashboard-table--nested tbody tr.row-focus-sub,
         .dashboard-table--nested tbody tr.row-active-sub {
-            background: var(--bg-elevated);
+            background: var(--bg-cream);
         }
 
         .row-sublabel {
             padding-left: 2.5rem;
-            color: var(--text-muted);
+            color: var(--text-dark-muted);
             font-weight: 300;
             font-size: 0.8125rem;
         }
@@ -287,7 +274,7 @@ def get_dashboard_css():
             padding: 0.5rem 0.875rem;
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
-            background: var(--bg-elevated);
+            background: var(--bg-light);
             font-family: 'Source Sans Pro', sans-serif;
             font-size: 0.8125rem;
             font-weight: 400;
@@ -296,8 +283,8 @@ def get_dashboard_css():
             text-overflow: ellipsis;
             max-width: 240px;
             vertical-align: middle;
-            border-radius: 6px;
-            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            border: 1px solid var(--border-light);
             position: relative;
             transition: all 0.2s ease;
         }
@@ -315,7 +302,7 @@ def get_dashboard_css():
         .entry:hover {
             border-color: var(--border-medium);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         /* Initiative types */
@@ -348,7 +335,7 @@ def get_dashboard_css():
         .entry.mind {
             color: var(--accent-quaternary);
             font-style: italic;
-            border-color: rgba(244, 114, 182, 0.2);
+            border-color: rgba(194, 54, 69, 0.15);
         }
 
         .entry.mind::before {
@@ -361,7 +348,7 @@ def get_dashboard_css():
 
         /* Empty state */
         .empty {
-            color: var(--text-muted);
+            color: var(--text-dark-muted);
             font-family: 'Source Sans Pro', sans-serif;
             font-size: 0.875rem;
             font-weight: 300;
@@ -374,27 +361,27 @@ def get_dashboard_css():
             display: inline-flex;
             align-items: center;
             padding: 0.25rem 0.625rem;
-            background: var(--bg-deep);
-            border: 1px solid var(--border-subtle);
+            background: var(--bg-dark);
+            border: 1px solid var(--border-light);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.6875rem;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text-light-secondary);
             margin-left: 0.5rem;
-            border-radius: 4px;
+            border-radius: 2px;
         }
 
         /* ===== PLAYLISTS SIDEBAR ===== */
         .playlists-sidebar {
-            background: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-paper);
+            border-radius: 2px;
             padding: 0;
             position: sticky;
             top: 2rem;
             max-height: calc(100vh - 4rem);
             overflow-y: auto;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .sidebar-title {
@@ -402,11 +389,21 @@ def get_dashboard_css():
             font-size: 1.125rem;
             font-weight: 600;
             padding: 1.5rem;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-dark-primary);
+            border-bottom: 1px solid var(--border-light);
             text-transform: none;
             letter-spacing: 0.02em;
             position: relative;
+        }
+
+        .sidebar-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary) 0%, transparent 100%);
         }
 
         .playlists-table {
@@ -417,11 +414,11 @@ def get_dashboard_css():
 
         .playlist-row {
             transition: all 0.2s ease;
-            border-bottom: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .playlist-row:hover {
-            background: var(--bg-elevated);
+            background: var(--bg-cream);
         }
 
         .playlist-row:last-child {
@@ -433,7 +430,7 @@ def get_dashboard_css():
         }
 
         .playlist-name a {
-            color: var(--text-primary);
+            color: var(--text-dark-primary);
             text-decoration: none;
             transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: block;
@@ -450,7 +447,7 @@ def get_dashboard_css():
 
         .playlist-count {
             text-align: right;
-            color: var(--text-muted);
+            color: var(--text-dark-muted);
             padding: 1rem 1.5rem 1rem 1rem;
             font-size: 0.75rem;
             font-weight: 400;
