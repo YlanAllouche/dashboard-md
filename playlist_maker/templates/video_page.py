@@ -11,9 +11,28 @@ def get_video_page_html(title, pywal_css, json_data):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 14 4-4'/%3E%3Cpath d='M3.34 19a10 10 0 1 1 17.32 0'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <style>
         {pywal_css}
+
+        :root {{
+            --bg-deep: #0c1016;
+            --bg-surface: #131820;
+            --bg-elevated: #1c2230;
+            --bg-card: #181e28;
+            --bg-subtle: rgba(255, 255, 255, 0.02);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --accent-primary: #e8c47c;
+            --accent-secondary: #7eb8da;
+            --accent-tertiary: #a78bfa;
+            --accent-quaternary: #f472b6;
+            --accent-success: #6bcf7f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-subtle: #475569;
+        }}
 
         * {{
             margin: 0;
@@ -22,52 +41,79 @@ def get_video_page_html(title, pywal_css, json_data):
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--background);
-            color: var(--foreground);
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, #0f151e 50%, var(--bg-surface) 100%);
+            color: var(--text-primary);
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }}
+
+        body::before {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.4;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(126, 184, 218, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(232, 196, 124, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(167, 139, 250, 0.03) 0%, transparent 50%);
+            z-index: 0;
         }}
 
         .container {{
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 2.5rem 2rem;
+            position: relative;
+            z-index: 1;
         }}
 
         .header {{
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
         }}
 
         .header h1 {{
-            color: var(--foreground);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            font-size: 2.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
         }}
 
         .header p {{
-            color: var(--color7);
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 300;
         }}
 
         .video-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.75rem;
         }}
 
         .video-card {{
-            background: var(--color0);
-            border-radius: 20px;
-            box-shadow: none;
-            transition: all 0.2s;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            border: 1px solid var(--color7);
+            border: 1px solid var(--border-subtle);
+            position: relative;
         }}
 
         .video-card:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }}
 
         .thumbnail-container {{
@@ -75,7 +121,7 @@ def get_video_page_html(title, pywal_css, json_data):
             width: 100%;
             padding-bottom: 56.25%;
             overflow: hidden;
-            background: var(--color8);
+            background: var(--bg-elevated);
             cursor: pointer;
         }}
 
@@ -86,7 +132,7 @@ def get_video_page_html(title, pywal_css, json_data):
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }}
 
         .video-card:hover .thumbnail {{
@@ -95,69 +141,74 @@ def get_video_page_html(title, pywal_css, json_data):
 
         .duration-badge {{
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: var(--color0);
-            color: var(--foreground);
-            padding: 4px 8px;
-            border-radius: 0;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(12, 16, 22, 0.85);
+            backdrop-filter: blur(8px);
+            color: var(--text-primary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 3px;
-            border: 1px solid var(--color7);
+            gap: 4px;
+            border: 1px solid var(--border-medium);
+            font-family: 'JetBrains Mono', monospace;
         }}
 
         .youtube-link-badge {{
-            background: var(--color0);
-            color: var(--foreground);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            padding: 0.25rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--color7);
+            border: 1px solid var(--border-subtle);
             text-decoration: none;
             transition: all 0.2s;
             margin: 0 8px;
         }}
 
         .youtube-link-badge:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--accent-primary);
         }}
 
         .deep-link-badge {{
-            background: var(--color0);
-            color: var(--foreground);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            padding: 0.25rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--color7);
+            border: 1px solid var(--border-subtle);
             text-decoration: none;
             transition: all 0.2s;
         }}
 
         .deep-link-badge:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--accent-primary);
         }}
 
         .card-content {{
-            padding: 1rem;
+            padding: 1.25rem;
         }}
 
         .video-title {{
+            font-family: 'Source Sans Pro', sans-serif;
             font-size: 1rem;
             font-weight: 600;
-            color: var(--foreground);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -169,94 +220,122 @@ def get_video_page_html(title, pywal_css, json_data):
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            font-size: 0.875rem;
-            color: var(--color7);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
         }}
 
         .channel-name {{
             font-weight: 500;
-            color: var(--color7);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+        }}
+
+        .channel-name svg {{
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
         }}
 
         .video-date {{
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: flex;
             align-items: center;
             gap: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }}
+
+        .video-date svg {{
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            margin-right: 4px;
+            vertical-align: text-bottom;
         }}
 
         .action-buttons {{
             display: flex;
-            gap: 0.5rem;
+            gap: 0.625rem;
             margin-bottom: 1rem;
         }}
 
         .btn {{
             flex: 1;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--color7);
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             text-decoration: none;
-            background: var(--color0);
-            color: var(--foreground);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Source Sans Pro', sans-serif;
+        }}
+
+        .btn svg {{
+            width: 14px;
+            height: 14px;
         }}
 
         .btn-inbox {{
-            background: var(--color0);
-            color: var(--foreground);
-            border: 1px solid var(--color7);
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
         }}
 
         .btn-inbox:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         .btn-inbox.active {{
-            background: var(--color4);
-            color: var(--color0);
-            border-color: var(--color4);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #d4a84f 100%);
+            border-color: var(--accent-primary);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px rgba(232, 196, 124, 0.25);
         }}
 
         .btn-watched {{
-            background: var(--color0);
-            color: var(--foreground);
-            border: 1px solid var(--color7);
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
         }}
 
         .btn-watched:hover {{
-            border-color: var(--color2);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         .btn-watched.active {{
-            background: var(--color2);
-            color: var(--color0);
-            border-color: var(--color2);
+            background: linear-gradient(135deg, var(--accent-success) 0%, #5ab86f 100%);
+            border-color: var(--accent-success);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px rgba(107, 207, 127, 0.25);
         }}
 
         .watched-indicator {{
             position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 12px;
-            height: 12px;
-            background: var(--color2);
-            border: 2px solid var(--color0);
+            top: 12px;
+            left: 12px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-success);
+            border: 2px solid var(--bg-card);
             border-radius: 50%;
             opacity: 0;
             transition: opacity 0.2s;
+            box-shadow: 0 2px 6px rgba(107, 207, 127, 0.4);
         }}
 
         .video-card.watched .watched-indicator {{
@@ -265,34 +344,41 @@ def get_video_page_html(title, pywal_css, json_data):
 
         .starred-button {{
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 12px;
+            right: 12px;
             width: 40px;
             height: 40px;
-            background: var(--color0);
-            border: 2px solid var(--color7);
+            background: rgba(12, 16, 22, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-medium);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
-            box-shadow: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }}
 
         .starred-button:hover {{
-            border-color: var(--color3);
+            border-color: var(--accent-quaternary);
+            transform: scale(1.1);
         }}
 
         .starred-button.active {{
-            color: var(--color3);
-            border-color: var(--color3);
+            color: var(--accent-quaternary);
+            border-color: var(--accent-quaternary);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
         }}
 
         .starred-button.inactive {{
-            color: var(--color7);
+            color: var(--text-muted);
+        }}
+
+        .starred-button svg {{
+            width: 20px;
+            height: 20px;
         }}
 
         .placeholder-thumbnail {{
@@ -305,66 +391,72 @@ def get_video_page_html(title, pywal_css, json_data):
             align-items: center;
             justify-content: center;
             font-size: 3rem;
-            background: var(--color8);
-            color: var(--foreground);
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+            color: var(--text-subtle);
         }}
 
         .tag-toggles {{
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.4rem;
-            margin-top: 0.5rem;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }}
 
         .tag-toggle {{
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            padding: 0.4rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            gap: 4px;
+            padding: 0.5rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.6875rem;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
-            border: 1px solid var(--color7);
-            background: var(--color0);
-            color: var(--foreground);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.05em;
+            font-family: 'Source Sans Pro', sans-serif;
         }}
 
         .tag-toggle:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         .tag-toggle.active {{
-            background: var(--color2);
-            border-color: var(--color2);
-            color: var(--color0);
+            background: linear-gradient(135deg, var(--accent-secondary) 0%, #6aa8cc 100%);
+            border-color: var(--accent-secondary);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 6px rgba(126, 184, 218, 0.25);
         }}
 
         .tag-toggle.inactive {{
-            background: var(--color1);
-            border-color: var(--color1);
-            color: var(--color0);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
         }}
 
         .stats {{
             margin-bottom: 2rem;
             text-align: center;
-            color: var(--color7);
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
         }}
 
         @media (max-width: 768px) {{
             .container {{
-                padding: 1rem 0.5rem;
+                padding: 1.5rem 1rem;
             }}
 
             .video-grid {{
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.25rem;
             }}
 
             .header h1 {{
@@ -372,18 +464,18 @@ def get_video_page_html(title, pywal_css, json_data):
             }}
 
             .btn {{
-                font-size: 0.75rem;
-                padding: 0.4rem 0.6rem;
+                font-size: 0.6875rem;
+                padding: 0.5rem 0.625rem;
             }}
 
             .tag-toggle {{
-                font-size: 0.7rem;
-                padding: 0.3rem 0.4rem;
+                font-size: 0.625rem;
+                padding: 0.375rem 0.5rem;
             }}
 
             .tag-toggles {{
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.3rem;
+                gap: 0.375rem;
             }}
         }}
     </style>

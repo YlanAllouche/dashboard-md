@@ -38,8 +38,27 @@ def get_home_page_header(pywal_css):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 14 4-4'/%3E%3Cpath d='M3.34 19a10 10 0 1 1 17.32 0'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <style>
         {pywal_css}
+
+        :root {{
+            --bg-deep: #0c1016;
+            --bg-surface: #131820;
+            --bg-elevated: #1c2230;
+            --bg-card: #181e28;
+            --bg-subtle: rgba(255, 255, 255, 0.02);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --accent-primary: #e8c47c;
+            --accent-secondary: #7eb8da;
+            --accent-tertiary: #a78bfa;
+            --accent-quaternary: #f472b6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-subtle: #475569;
+        }}
 
         * {{
             margin: 0;
@@ -48,40 +67,90 @@ def get_home_page_header(pywal_css):
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--background);
-            color: var(--foreground);
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, #0f151e 50%, var(--bg-surface) 100%);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }}
+
+        body::before {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.4;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(126, 184, 218, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(232, 196, 124, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(167, 139, 250, 0.03) 0%, transparent 50%);
+            z-index: 0;
         }}
 
         .page-header {{
             text-align: center;
-            padding: 2rem 1rem;
-            border-bottom: 2px solid var(--color7);
-            background: var(--color8);
+            padding: 4rem 3rem;
+            background: var(--bg-card);
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }}
+
+        .page-header::before {{
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(232, 196, 124, 0.08) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }}
+
+        @keyframes rotate {{
+            from {{ transform: rotate(0deg); }}
+            to {{ transform: rotate(360deg); }}
         }}
 
         .page-header h1 {{
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            position: relative;
         }}
 
         .page-header p {{
-            font-size: 1rem;
-            opacity: 0.8;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+            position: relative;
         }}
 
         {get_dashboard_css()}
 
         @media (max-width: 768px) {{
+            .page-header {{
+                padding: 2.5rem 1.5rem;
+            }}
+
             .page-header h1 {{
-                font-size: 1.8rem;
+                font-size: 2rem;
             }}
 
             .page-header p {{
-                font-size: 0.9rem;
+                font-size: 0.75rem;
             }}
         }}
     </style>
@@ -91,7 +160,7 @@ def get_home_page_header(pywal_css):
         <h1>Dashboard</h1>
         <p>Your personal dashboard and playlist manager</p>
     </div>
-    
+
     <div class="main-layout">
         <div class="main-content">
 """
@@ -281,9 +350,28 @@ def get_unified_home_page_html(pywal_css, successful_collections):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 14 4-4'/%3E%3Cpath d='M3.34 19a10 10 0 1 1 17.32 0'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <style>
         {pywal_css}
+
+        :root {{
+            --bg-deep: #0c1016;
+            --bg-surface: #131820;
+            --bg-elevated: #1c2230;
+            --bg-card: #181e28;
+            --bg-subtle: rgba(255, 255, 255, 0.02);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --accent-primary: #e8c47c;
+            --accent-secondary: #7eb8da;
+            --accent-tertiary: #a78bfa;
+            --accent-quaternary: #f472b6;
+            --accent-success: #6bcf7f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-subtle: #475569;
+        }}
 
         * {{
             margin: 0;
@@ -292,93 +380,128 @@ def get_unified_home_page_html(pywal_css, successful_collections):
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--background);
-            color: var(--foreground);
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, #0f151e 50%, var(--bg-surface) 100%);
+            color: var(--text-primary);
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }}
+
+        body::before {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.4;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(126, 184, 218, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(232, 196, 124, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(167, 139, 250, 0.03) 0%, transparent 50%);
+            z-index: 0;
         }}
 
         .tabs {{
             display: flex;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: var(--color8);
-            border-bottom: 1px solid var(--color7);
+            gap: 0.25rem;
+            padding: 0.625rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
             overflow-x: auto;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }}
 
         .refresh-button {{
             margin-left: auto;
-            padding: 0.5rem;
+            padding: 0.625rem;
             background: transparent;
-            color: var(--foreground);
-            border: none;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }}
 
         .refresh-button:hover {{
-            color: var(--color4);
+            color: var(--accent-primary);
+            border-color: var(--border-medium);
+            background: var(--bg-subtle);
         }}
 
         .tab-button {{
             padding: 0.75rem 1.5rem;
-            background: var(--color0);
-            color: var(--foreground);
-            border: 1px solid var(--color7);
-            border-radius: 0;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: 'Source Sans Pro', sans-serif;
             white-space: nowrap;
         }}
 
         .tab-button:hover {{
-            border-color: var(--color4);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         .tab-button.active {{
-            background: var(--color4);
-            color: var(--color0);
-            border-color: var(--color4);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #d4a84f 100%);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px rgba(232, 196, 124, 0.25);
         }}
 
         .sub-tabs {{
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
             padding: 0.5rem 1rem 0 1rem;
-            background: var(--color0);
-            border-bottom: 1px solid var(--color7);
-            margin-bottom: 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 1.5rem;
+            border-radius: 12px 12px 0 0;
         }}
 
         .sub-tab-button {{
-            padding: 0.5rem 1rem;
+            padding: 0.625rem 1rem;
             background: transparent;
-            color: var(--foreground);
+            color: var(--text-muted);
             border: none;
-            border-radius: 0;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8125rem;
             font-weight: 500;
             transition: all 0.2s;
+            font-family: 'Source Sans Pro', sans-serif;
         }}
 
         .sub-tab-button:hover {{
-            color: var(--color4);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         .sub-tab-button.active {{
-            color: var(--color4);
-            border-bottom: 2px solid var(--color4);
+            color: var(--accent-primary);
+            background: linear-gradient(135deg, rgba(232, 196, 124, 0.1) 0%, rgba(232, 196, 124, 0.05) 100%);
+            border: 1px solid rgba(232, 196, 124, 0.2);
         }}
 
         .container {{
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
         }}
 
         .tab-content {{
@@ -387,6 +510,18 @@ def get_unified_home_page_html(pywal_css, successful_collections):
 
         .tab-content.active {{
             display: block;
+            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }}
+
+        @keyframes fadeSlideIn {{
+            from {{
+                opacity: 0;
+                transform: translateY(10px);
+            }}
+            to {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
 
         .collection {{
@@ -399,89 +534,124 @@ def get_unified_home_page_html(pywal_css, successful_collections):
         }}
 
         .collection h3 {{
-            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--foreground);
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--color7);
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            letter-spacing: -0.01em;
         }}
 
         .empty-message {{
             text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9375rem;
         }}
 
         /* Video links */
         .collection-links {{
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
         }}
 
         .collection-link {{
             display: block;
-            padding: 1.5rem;
-            background: var(--color0);
-            border: 1px solid var(--color7);
-            border-radius: 0;
+            padding: 1.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
             text-decoration: none;
-            color: var(--foreground);
-            transition: all 0.2s;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }}
+
+        .collection-link::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s;
         }}
 
         .collection-link:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }}
+
+        .collection-link:hover::before {{
+            opacity: 1;
         }}
 
         .collection-title {{
-            font-size: 1.1rem;
+            font-size: 1.125rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
         }}
 
         .collection-count {{
-            opacity: 0.7;
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: 0.8125rem;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }}
 
         /* Video fragment styles */
         #video-fragment-container .header {{
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             position: relative;
         }}
 
         #video-fragment-container .header h1 {{
-            color: var(--foreground);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            font-size: 2.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
         }}
 
         #video-fragment-container .header p {{
-            color: var(--color7);
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 300;
         }}
 
         #video-fragment-container .video-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.75rem;
         }}
 
         #video-fragment-container .video-card {{
-            background: var(--color0);
-            border-radius: 0;
-            box-shadow: none;
-            transition: all 0.2s;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            border: 1px solid var(--color7);
+            border: 1px solid var(--border-subtle);
+            position: relative;
         }}
 
         #video-fragment-container .video-card:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }}
 
         #video-fragment-container .thumbnail-container {{
@@ -489,7 +659,7 @@ def get_unified_home_page_html(pywal_css, successful_collections):
             width: 100%;
             padding-bottom: 56.25%;
             overflow: hidden;
-            background: var(--color8);
+            background: var(--bg-elevated);
             cursor: pointer;
         }}
 
@@ -500,7 +670,7 @@ def get_unified_home_page_html(pywal_css, successful_collections):
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }}
 
         #video-fragment-container .video-card:hover .thumbnail {{
@@ -509,30 +679,33 @@ def get_unified_home_page_html(pywal_css, successful_collections):
 
         #video-fragment-container .duration-badge {{
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: var(--color0);
-            color: var(--foreground);
-            padding: 4px 8px;
-            border-radius: 0;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(12, 16, 22, 0.85);
+            backdrop-filter: blur(8px);
+            color: var(--text-primary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 3px;
-            border: 1px solid var(--color7);
+            gap: 4px;
+            border: 1px solid var(--border-medium);
+            font-family: 'JetBrains Mono', monospace;
         }}
 
         #video-fragment-container .card-content {{
-            padding: 1rem;
+            padding: 1.25rem;
         }}
 
         #video-fragment-container .video-title {{
+            font-family: 'Source Sans Pro', sans-serif;
             font-size: 1rem;
             font-weight: 600;
-            color: var(--foreground);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -544,94 +717,114 @@ def get_unified_home_page_html(pywal_css, successful_collections):
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            font-size: 0.875rem;
-            color: var(--color7);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
         }}
 
         #video-fragment-container .channel-name {{
             font-weight: 500;
-            color: var(--color7);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+        }}
+
+        #video-fragment-container .channel-name svg {{
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
         }}
 
         #video-fragment-container .video-date {{
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: flex;
             align-items: center;
             gap: 4px;
+            font-family: 'JetBrains Mono', monospace;
         }}
 
         #video-fragment-container .action-buttons {{
             display: flex;
-            gap: 0.5rem;
+            gap: 0.625rem;
             margin-bottom: 1rem;
         }}
 
         #video-fragment-container .btn {{
             flex: 1;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--color7);
-            border-radius: 0;
-            font-size: 0.8rem;
-            font-weight: 500;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             text-decoration: none;
-            background: var(--color0);
-            color: var(--foreground);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Source Sans Pro', sans-serif;
+        }}
+
+        #video-fragment-container .btn svg {{
+            width: 14px;
+            height: 14px;
         }}
 
         #video-fragment-container .btn-inbox {{
-            background: var(--color0);
-            color: var(--foreground);
-            border: 1px solid var(--color7);
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
         }}
 
         #video-fragment-container .btn-inbox:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         #video-fragment-container .btn-inbox.active {{
-            background: var(--color4);
-            color: var(--color0);
-            border-color: var(--color4);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #d4a84f 100%);
+            border-color: var(--accent-primary);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px rgba(232, 196, 124, 0.25);
         }}
 
         #video-fragment-container .btn-watched {{
-            background: var(--color0);
-            color: var(--foreground);
-            border: 1px solid var(--color7);
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
         }}
 
         #video-fragment-container .btn-watched:hover {{
-            border-color: var(--color2);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         #video-fragment-container .btn-watched.active {{
-            background: var(--color2);
-            color: var(--color0);
-            border-color: var(--color2);
+            background: linear-gradient(135deg, var(--accent-success) 0%, #5ab86f 100%);
+            border-color: var(--accent-success);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 8px rgba(107, 207, 127, 0.25);
         }}
 
         #video-fragment-container .watched-indicator {{
             position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 12px;
-            height: 12px;
-            background: var(--color2);
-            border: 2px solid var(--color0);
+            top: 12px;
+            left: 12px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-success);
+            border: 2px solid var(--bg-card);
             border-radius: 50%;
             opacity: 0;
             transition: opacity 0.2s;
+            box-shadow: 0 2px 6px rgba(107, 207, 127, 0.4);
         }}
 
         #video-fragment-container .video-card.watched .watched-indicator {{
@@ -640,34 +833,41 @@ def get_unified_home_page_html(pywal_css, successful_collections):
 
         #video-fragment-container .starred-button {{
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 12px;
+            right: 12px;
             width: 40px;
             height: 40px;
-            background: var(--color0);
-            border: 2px solid var(--color7);
-            border-radius: 0;
+            background: rgba(12, 16, 22, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-medium);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
-            box-shadow: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }}
 
         #video-fragment-container .starred-button:hover {{
-            border-color: var(--color3);
+            border-color: var(--accent-quaternary);
+            transform: scale(1.1);
         }}
 
         #video-fragment-container .starred-button.active {{
-            color: var(--color3);
-            border-color: var(--color3);
+            color: var(--accent-quaternary);
+            border-color: var(--accent-quaternary);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
         }}
 
         #video-fragment-container .starred-button.inactive {{
-            color: var(--color7);
+            color: var(--text-muted);
+        }}
+
+        #video-fragment-container .starred-button svg {{
+            width: 20px;
+            height: 20px;
         }}
 
         #video-fragment-container .placeholder-thumbnail {{
@@ -680,56 +880,62 @@ def get_unified_home_page_html(pywal_css, successful_collections):
             align-items: center;
             justify-content: center;
             font-size: 3rem;
-            background: var(--color8);
-            color: var(--foreground);
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+            color: var(--text-subtle);
         }}
 
         #video-fragment-container .tag-toggles {{
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.4rem;
-            margin-top: 0.5rem;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }}
 
         #video-fragment-container .tag-toggle {{
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            padding: 0.4rem 0.5rem;
-            border-radius: 0;
-            font-size: 0.75rem;
-            font-weight: 500;
+            gap: 4px;
+            padding: 0.5rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.6875rem;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
-            border: 1px solid var(--color7);
-            background: var(--color0);
-            color: var(--foreground);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.05em;
+            font-family: 'Source Sans Pro', sans-serif;
         }}
 
         #video-fragment-container .tag-toggle:hover {{
-            border-color: var(--color4);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+            background: var(--bg-subtle);
         }}
 
         #video-fragment-container .tag-toggle.active {{
-            background: var(--color2);
-            border-color: var(--color2);
-            color: var(--color0);
+            background: linear-gradient(135deg, var(--accent-secondary) 0%, #6aa8cc 100%);
+            border-color: var(--accent-secondary);
+            color: var(--bg-deep);
+            box-shadow: 0 2px 6px rgba(126, 184, 218, 0.25);
         }}
 
         #video-fragment-container .tag-toggle.inactive {{
-            background: var(--color1);
-            border-color: var(--color1);
-            color: var(--color0);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
         }}
 
         #video-fragment-container .stats {{
             margin-bottom: 2rem;
             text-align: center;
-            color: var(--color7);
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
         }}
 
         {get_table_styles()}
@@ -737,10 +943,24 @@ def get_unified_home_page_html(pywal_css, successful_collections):
         @media (max-width: 768px) {{
             .tabs {{
                 flex-wrap: wrap;
+                padding: 0.5rem;
             }}
 
             .container {{
-                padding: 1rem 0.5rem;
+                padding: 1rem 0.75rem;
+            }}
+
+            #video-fragment-container .header h1 {{
+                font-size: 2rem;
+            }}
+
+            #video-fragment-container .video-grid {{
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }}
+
+            .collection-links {{
+                grid-template-columns: 1fr;
             }}
         }}
     </style>
