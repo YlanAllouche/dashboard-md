@@ -99,13 +99,33 @@ def get_video_page_html(title, pywal_css, json_data):
             background: var(--color0);
             color: var(--foreground);
             padding: 4px 8px;
-            border-radius: 12px;
+            border-radius: 0;
             font-size: 0.75rem;
             font-weight: 500;
             display: flex;
             align-items: center;
             gap: 3px;
             border: 1px solid var(--color7);
+        }}
+
+        .youtube-link-badge {{
+            background: var(--color0);
+            color: var(--foreground);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color7);
+            text-decoration: none;
+            transition: all 0.2s;
+            margin: 0 8px;
+        }}
+
+        .youtube-link-badge:hover {{
+            border-color: var(--color4);
         }}
 
         .card-content {{
@@ -367,17 +387,17 @@ def get_video_page_html(title, pywal_css, json_data):
         // Video data from JSON file
         const videoData = {json_data};
 
+        // Tags data from -tags.json (placeholder, will be replaced by Python)
+        const tagsData = {{TAGS_DATA}};
+
         const placeholderThumbnails = ['🎬', '📺', '🎥', '🎞️', '📹', '🎪', '🎭', '🎨', '🎯', '🎲'];
 
-        // Tag definitions with SVG glyphs and labels
-        const tagDefinitions = [
-            {{ name: 'focus', glyph: '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>', label: 'Focus' }},
-            {{ name: 'entertain', glyph: '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M2 12a10 10 0 0110-10 10 10 0 0110 10 10 10 0 01-10 10A10 10 0 012 12z"/><path d="M9 8a1 1 0 011-1h2a1 1 0 011 1v3a1 1 0 01-1 1h-2a1 1 0 01-1-1V8z" fill="white"/><path d="M14 9a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V9z" fill="white"/></svg>', label: 'Fun' }},
-            {{ name: 'tv', glyph: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>', label: 'TV' }},
-            {{ name: 'walk', glyph: '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><circle cx="12" cy="3" r="2"/><path d="M12 8v2m0 0l-4 4m4-4l4 4m0 0v3a2 2 0 01-4 0v-1a2 2 0 00-4 0v1a2 2 0 01-4 0v-3"/></svg>', label: 'Walk' }},
-            {{ name: 'bed', glyph: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M2 4v16a2 2 0 002 2h16a2 2 0 002-2V4"/><line x1="2" y1="9" x2="22" y2="9"/><rect x="2" y="4" width="20" height="5"/></svg>', label: 'Bed' }},
-            {{ name: 'tech', glyph: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="17" x2="22" y2="17"/><line x1="6" y1="21" x2="18" y2="21"/></svg>', label: 'Tech' }}
-        ];
+        // Tag definitions from tagsData
+        const tagDefinitions = Object.entries(tagsData).map(([name, value]) => ({{
+            name,
+            glyph: value,
+            label: value
+        }}));
 
         function createObsidianLink(command) {{
             const baseUrl = 'obsidian://advanced-uri?vault=share&eval=';
@@ -404,6 +424,10 @@ def get_video_page_html(title, pywal_css, json_data):
             return createObsidianLink(command);
         }}
 
+        function createYouTubeLink(locator) {{
+            return `https://youtube.com/watch?v=${{locator}}`;
+        }}
+
         function formatDuration(seconds) {{
             const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
@@ -427,15 +451,11 @@ def get_video_page_html(title, pywal_css, json_data):
         function createTagToggles(video) {{
             return tagDefinitions.map(tagDef => {{
                 const isActive = video.tags?.includes(tagDef.name);
-                const statusSvg = isActive ? '<svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/></svg>';
                 const statusClass = isActive ? 'active' : 'inactive';
                 const link = createTagToggleLink(video.id, tagDef.name);
                 
                 return `<a href="${{link}}" class="tag-toggle ${{statusClass}}" title="${{tagDef.name}}: ${{isActive ? 'Active' : 'Inactive'}}">
-                    <span style="display:inline-flex;align-items:center;gap:3px;">
-                        <span style="width:12px;height:12px;display:inline-flex;">${{statusSvg}}</span>
-                        <span style="width:14px;height:14px;display:inline-flex;">${{tagDef.glyph}}</span>
-                    </span> ${{tagDef.label}}
+                    ${{tagDef.glyph}}
                 </a>`;
             }}).join('');
         }}
@@ -465,7 +485,7 @@ def get_video_page_html(title, pywal_css, json_data):
                             </span>
                         </a>
                         <div class="duration-badge">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline;margin-right:2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${{formatDuration(video.duration)}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock" style="width:14px;height:14px;display:inline;"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg> ${{formatDuration(video.duration)}}
                         </div>
                         <div class="watched-indicator"></div>
                     </div>
@@ -473,18 +493,21 @@ def get_video_page_html(title, pywal_css, json_data):
                         <h3 class="video-title">${{video.summary}}</h3>
                         <div class="video-meta">
                             <span class="channel-name">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${{video.channel}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${{video.channel}}
                             </span>
+                            <a href="${{createYouTubeLink(video.locator)}}" class="youtube-link-badge" target="_blank" rel="noopener noreferrer" title="Open in YouTube">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link-icon lucide-link" style="width:14px;height:14px;display:inline;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            </a>
                             <span class="video-date">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${{formatDate(video.date)}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>${{formatDate(video.date)}}
                             </span>
                         </div>
                         <div class="action-buttons">
                             <a href="${{inboxWatchedLink}}" class="btn btn-watched ${{isWatched ? 'active' : ''}}" title="Toggle watched + inbox">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M20 6L9 17l-5-5"/></svg> Watched
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check" style="width:14px;height:14px;"><path d="M20 6 9 17l-5-5"/></svg> Watched
                             </a>
                             <a href="${{inboxLink}}" class="btn btn-inbox ${{isInboxActive ? 'active' : ''}}" title="Toggle inbox only">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M22 12h-7l-2 5H9l-2-5H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.88 4H7.12a2 2 0 00-1.67 1.11z"/></svg> Inbox
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox-icon lucide-inbox" style="width:14px;height:14px;"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> Inbox
                             </a>
                         </div>
                         <div class="tag-toggles">

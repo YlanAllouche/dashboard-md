@@ -42,18 +42,27 @@ def generate_home_page(output_dir, successful_files):
 
 
 def generate_html(json_data, title):
-    """Generate the complete HTML with embedded JSON data"""
+    """Generate complete HTML with embedded JSON data"""
     # Get pywal colors
     pywal_css = extract_pywal_colors()
+
+    # Load tags from -tags.json
+    tags_file = Path.home() / "share" / "_tmp" / "-tags.json"
+    tags_data = {}
+    if tags_file.exists():
+        with open(tags_file, "r", encoding="utf-8") as f:
+            tags_data = json.load(f)
 
     # Load JavaScript template
     javascript_template = load_template("video.js")
 
-    # Convert json_data to JSON string
+    # Convert json_data and tags_data to JSON strings
     json_str = json.dumps(json_data, indent=8)
+    tags_str = json.dumps(tags_data, indent=8)
 
-    # Format JavaScript with video data (use replace to avoid format string issues)
+    # Format JavaScript with video data and tags (use replace to avoid format string issues)
     javascript = javascript_template.replace("{VIDEO_DATA}", json_str)
+    javascript = javascript.replace("{TAGS_DATA}", tags_str)
 
     from playlist_maker.utils.templates import render_video_template
     # Render video template
