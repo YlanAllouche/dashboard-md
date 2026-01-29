@@ -9,7 +9,7 @@ CONTENT_TYPE_RULES = {
     "video": {
         "priority": 1,
         "required_fields": ["id", "summary", "duration", "channel", "date", "locator"],
-        "optional_fields": ["thumbnail", "watched", "tags"],
+        "optional_fields": ["thumbnail", "watched", "tags", "file", "line"],
         "type_field_value": "Note",
         "status_field_value": "youtube",
         "validator": "validate_video_data"
@@ -157,6 +157,8 @@ def sanitize_video_data(data):
             "thumbnail": item.get("thumbnail", ""),
             "watched": bool(item.get("watched", False)),
             "tags": item.get("tags", []) if isinstance(item.get("tags"), list) else [],
+            "file": item.get("file", ""),
+            "line": int(item.get("line", 0)),
         }
 
         # Skip if essential fields are empty

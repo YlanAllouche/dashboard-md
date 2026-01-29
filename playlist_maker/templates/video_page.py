@@ -10,6 +10,7 @@ def get_video_page_html(title, pywal_css, json_data):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 14 4-4'/%3E%3Cpath d='M3.34 19a10 10 0 1 1 17.32 0'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap">
     <style>
         {pywal_css}
@@ -125,6 +126,25 @@ def get_video_page_html(title, pywal_css, json_data):
         }}
 
         .youtube-link-badge:hover {{
+            border-color: var(--color4);
+        }}
+
+        .deep-link-badge {{
+            background: var(--color0);
+            color: var(--foreground);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color7);
+            text-decoration: none;
+            transition: all 0.2s;
+        }}
+
+        .deep-link-badge:hover {{
             border-color: var(--color4);
         }}
 
@@ -428,6 +448,12 @@ def get_video_page_html(title, pywal_css, json_data):
             return `https://youtube.com/watch?v=${{locator}}`;
         }}
 
+        function createDeepLink(file, line) {{
+            const lineStr = String(line);
+            const command = `let tp = app.plugins.plugins["templater-obsidian"].templater.current_functions_object; tp.user.openLineInNvim("${{file}}", ${{lineStr}});`;
+            return createObsidianLink(command);
+        }}
+
         function formatDuration(seconds) {{
             const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
@@ -474,6 +500,7 @@ def get_video_page_html(title, pywal_css, json_data):
             const inboxWatchedLink = createInboxWatchedToggleLink(video.id);
             const inboxLink = createInboxToggleLink(video.id);
             const starredLink = createTagToggleLink(video.id, 'starred');
+            const deepLink = video.file ? createDeepLink(`~/share/${{video.file}}`, video.line) : null;
 
             return `
                 <div class="video-card ${{watchedClass}}" data-id="${{video.id}}">
@@ -496,8 +523,9 @@ def get_video_page_html(title, pywal_css, json_data):
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${{video.channel}}
                             </span>
                             <a href="${{createYouTubeLink(video.locator)}}" class="youtube-link-badge" target="_blank" rel="noopener noreferrer" title="Open in YouTube">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link-icon lucide-link" style="width:14px;height:14px;display:inline;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge-icon lucide-gauge" style="width:14px;height:14px;display:inline;"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
                             </a>
+                            ${{video.file ? '$<span style="color: var(--color7);">/</span> <a href="${{deepLink}}" class="deep-link-badge" title="Open in Obsidian"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-icon lucide-file" style="width:14px;height:14px;display:inline;"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></svg></a>$' : ''}}
                             <span class="video-date">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>${{formatDate(video.date)}}
                             </span>
@@ -521,12 +549,9 @@ def get_video_page_html(title, pywal_css, json_data):
         function renderStats() {{
             const totalVideos = videoData.length;
             const totalDuration = videoData.reduce((sum, v) => sum + v.duration, 0);
-            
+
             const statsElement = document.getElementById('stats');
-            statsElement.innerHTML = `
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin-right:4px;vertical-align:middle;"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${{totalVideos}} videos • 
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;display:inline;margin:0 4px 0 4px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${{formatDuration(totalDuration)}} total
-            `;
+            statsElement.innerHTML = `${{totalVideos}} videos • ${{formatDuration(totalDuration)}} total`;
         }}
 
         function renderVideos() {{
