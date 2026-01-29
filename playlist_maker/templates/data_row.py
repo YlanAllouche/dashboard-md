@@ -12,6 +12,8 @@ Field Mapping by Type:
 - Notes: status → title (+ description) → active/focus
 """
 
+from ..utils.svg_icons import SVGIcons
+
 
 def get_table_styles():
     """
@@ -59,6 +61,54 @@ def get_table_styles():
 
     /* Column styles */
     .status-cell {
+        padding: 0.75rem 1rem;
+        width: 140px;
+    }
+
+    .status-icon-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        width: 140px;
+    }
+
+    .status-icon-cell svg {
+        width: 16px;
+        height: 16px;
+        color: var(--foreground);
+    }
+
+    .status-icon-cell[data-status="?"] {
+        background: #ffffff;
+    }
+    .status-icon-cell[data-status="?"] svg {
+        color: #0000ff;
+    }
+    .status-icon-cell[data-status="w"] {
+        background: #ffffff;
+    }
+    .status-icon-cell[data-status="w"] svg {
+        color: #0000ff;
+    }
+    .status-icon-cell[data-status="t"] {
+        background: #ffffff;
+    }
+    .status-icon-cell[data-status="t"] svg {
+        color: #0000ff;
+    }
+
+    .scheduled-cell {
+        padding: 0.75rem 1rem;
+        width: 140px;
+    }
+
+    .location-cell {
+        padding: 0.75rem 1rem;
+        width: 140px;
+    }
+
+    .workspace-cell {
         padding: 0.75rem 1rem;
         width: 140px;
     }
@@ -131,6 +181,29 @@ def get_table_styles():
 
 
     '''
+
+
+def create_status_cell(status):
+    """
+    Create a status cell with optional icon or text.
+
+    Args:
+        status: Status value string
+
+    Returns:
+        str: HTML for status cell
+    """
+    icon = SVGIcons.get_status_icon(status)
+    if icon:
+        return f'''
+        <td class="status-cell status-icon-cell" data-status="{status}">
+            {icon}
+        </td>'''
+    else:
+        return f'''
+        <td class="status-cell">
+            {status}
+        </td>'''
 
 
 def create_title_cell(title, description="", file="", line=1):
@@ -267,10 +340,7 @@ def render_task_collection(collection_info, is_first=False):
             task.get("line", 1)
         )
 
-        metadata_html = f'''
-        <td class="status-cell">
-            {status}
-        </td>'''
+        metadata_html = create_status_cell(status)
 
         toggles_html = create_state_toggles_html(
             task["id"],
@@ -334,10 +404,7 @@ def render_calendar_collection(collection_info, is_first=False):
                 <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
             {scheduled}
-        </td>
-        <td class="status-cell">
-            {status}
-        </td>'''
+        </td>{create_status_cell(status)}'''
 
         location_html = f'''
         <td class="location-cell">
@@ -439,10 +506,7 @@ def render_notes_collection(collection_info, is_first=False):
         )
         status = note.get("status", "active")
 
-        metadata_html = f'''
-        <td class="status-cell">
-            {status}
-        </td>'''
+        metadata_html = create_status_cell(status)
 
         toggles_html = create_state_toggles_html(
             note["id"],

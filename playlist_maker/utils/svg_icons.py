@@ -16,6 +16,14 @@ class SVGIcons:
     FILM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>'
     EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
     STATS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'
+    QUESTION_MARK = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>'
+
+    # Status icon mapping
+    STATUS_ICONS = {
+        '?': QUESTION_MARK,
+        'w': QUESTION_MARK,
+        't': QUESTION_MARK,
+    }
 
     # Tag icons
     FOCUS = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>'
@@ -36,3 +44,8 @@ class SVGIcons:
             'bed': SVGIcons.BED,
             'tech': SVGIcons.TECH,
         }
+
+    @staticmethod
+    def get_status_icon(status: str):
+        """Get SVG icon for a status value, returns None if no icon defined"""
+        return SVGIcons.STATUS_ICONS.get(status)
