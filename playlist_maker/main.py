@@ -47,7 +47,7 @@ def generate_html(json_data, title):
     pywal_css = extract_pywal_colors()
 
     # Load tags from -tags.json
-    tags_file = Path.home() / "share" / "_tmp" / "-tags.json"
+    tags_file = Path.home() / "share" / "_scripts" / "-tags.json"
     tags_data = {}
     if tags_file.exists():
         with open(tags_file, "r", encoding="utf-8") as f:
