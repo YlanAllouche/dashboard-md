@@ -3,6 +3,8 @@
 Generate HTML dashboards from Obsidian Dataview query materialization.
 hyper-idiosyncratic tool templating html dashboard pages from dataview/obsidan query materialization into json files and abusing deep links for browser <=> obsidian <=> nvim communication
 
+(Yes, clicking on any of the thumbnail would immediately play them locally in jellyfin-mpv-shim)  
+
 https://github.com/user-attachments/assets/62c2a80a-18f8-4f7e-b6ba-0b10288a6223
 
 ## Overview
