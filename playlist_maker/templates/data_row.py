@@ -8,7 +8,7 @@ Row Structure Convention (all types):
 Field Mapping by Type:
 - Tasks: status → title → active/focus
 - Calendar: date → status → title → location → (no actions)
-- Projects: workspace/class → title → active/focus
+- Projects: status → title → active/focus
 - Notes: status → title (+ description) → active/focus
 """
 
@@ -614,7 +614,7 @@ def render_project_collection(collection_info, is_first=False):
     Render a single project collection as a table.
 
     Row structure:
-    1. Workspace/class cell (extra field - FIRST)
+    1. Status cell (extra field - FIRST)
     2. Title cell (project title - as link)
     3. Action cell (active/focus toggles)
 
@@ -640,13 +640,9 @@ def render_project_collection(collection_info, is_first=False):
             project.get("file", ""),
             project.get("line", 1),
         )
-        workspace = project.get("workspace", "")
-        class_type = project.get("class", "")
+        status = project.get("status", "")
 
-        metadata_html = f"""
-        <td class="workspace-cell">
-            {workspace or class_type}
-        </td>"""
+        metadata_html = create_status_cell(status)
 
         toggles_html = create_state_toggles_html(
             project["id"], project.get("active", False), project.get("focus", False)

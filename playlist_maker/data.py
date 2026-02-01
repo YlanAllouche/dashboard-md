@@ -25,8 +25,8 @@ CONTENT_TYPE_RULES = {
         "priority": 3,
         "required_fields": ["file", "summary"],
         "optional_fields": ["workspace", "class", "status", "progress", "due_date", "active", "focus"],
-        "type_field_value": "note",
-        "status_field_value": "current",
+        "type_field_value": "project",
+        "status_field_value": None,
         "validator": "validate_project_data"
     },
     "task": {
@@ -254,7 +254,7 @@ def validate_project_data(data):
         if not isinstance(item, dict):
             continue
 
-        if item.get("type") == "note" and item.get("status") == "current":
+        if item.get("type") == "project":
             valid_items += 1
 
     if valid_items == 0:
@@ -400,7 +400,7 @@ def sanitize_project_data(data):
         if not isinstance(item, dict):
             continue
 
-        if item.get("type") != "note" or item.get("status") != "current":
+        if item.get("type") != "project":
             continue
 
         file_path = item.get("file", "")
@@ -416,14 +416,14 @@ def sanitize_project_data(data):
         sanitized_item = {
             "id": str(id_value),
             "title": str(summary),
-            "workspace": str(""),
-            "class": str(""),
-            "status": str("current"),
-            "progress": int(0),
-            "due_date": str(""),
-            "description": "",
-            "active": bool(True),
-            "focus": bool(False),
+            "workspace": str(item.get("workspace", "")),
+            "class": str(item.get("class", "")),
+            "status": str(item.get("status", "")),
+            "progress": int(item.get("progress", 0)),
+            "due_date": str(item.get("due_date", "")),
+            "description": str(item.get("description", "")),
+            "active": bool(item.get("active", True)),
+            "focus": bool(item.get("focus", False)),
             "file": str(file_path),
             "line": int(line)
         }
