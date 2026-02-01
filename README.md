@@ -3,7 +3,7 @@
 Generate HTML dashboards from Obsidian Dataview query materialization.
 hyper-idiosyncratic tool templating html dashboard pages from dataview/obsidan query materialization into json files and abusing deep links for browser <=> obsidian <=> nvim communication
 
-<video src="example.mp4" controls width="100%"></video>
+<video src="./example.mp4" controls width="100%"></video>
 
 ## Overview
 
