@@ -54,15 +54,16 @@ JSON files should follow Obsidian Dataview export structure. The tool automatica
 
 ## Dependencies
 
-- jelly_yt_play
-- some random js scripts in
-- presence of -tags.json file
+- jelly_yt_play (see https://github.com/YlanAllouche/jelly_play_scripts)
+-  a whole lot of js scripts in `~/share/_scripts/templates` (see https://github.com/YlanAllouche/personal-share-example)
+- presence of `-tags.json` file in ~/share/_scripts
 - obsidian
-- templater
-- deeplink
-- dataview
+- obsidian plugins
+    - templater
+    - deeplink 
+    - dataview 
 - python
-- nvim ran with a socket at specific path
+- nvim ran with a socket at specific path (`~/.cache/nvim/share.pipe`)
 
 ## License
 
